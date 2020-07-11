@@ -4,6 +4,9 @@
     v-shortkey="multiKeys"
     @shortkey="addOrRemoveLabel"
   >
+    <v-card-text class="title">
+      {{ currentDoc.text }}
+    </v-card-text>
     <v-card-title>
       <multi-class-classification
         :labels="items"
@@ -12,9 +15,6 @@
         :delete-label="removeLabel"
       />
     </v-card-title>
-    <v-card-text class="title">
-      {{ currentDoc.text }}
-    </v-card-text>
   </v-card>
 </template>
 
