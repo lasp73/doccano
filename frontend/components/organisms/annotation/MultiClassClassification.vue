@@ -1,7 +1,7 @@
 <template>
   <v-combobox
     :value="annotatedLabels"
-    :items="labels"
+    :items="sortedLabels"
     @input="add"
     item-text="text"
     label="Label"
@@ -11,10 +11,11 @@
   >
     <template v-slot:selection="{ attrs, item, select, selected }">
       <v-chip
+        :active="isValidLabel(item)"
         v-bind="attrs"
         :input-value="selected"
-        :color="item.background_color"
-        :text-color="textColor(item.background_color)"
+        :color="backgroundColor(item)"
+        :text-color="textColor(item)"
         @click="select"
         @click:close="remove(item.id)"
         close
@@ -53,6 +54,9 @@ export default {
   },
 
   computed: {
+    sortedLabels() {
+      return this.labels.slice().sort((a, b) => ((a.text < b.text) ? -1 : 1))
+    },
     annotatedLabels() {
       const labelIds = this.annotations.map(item => item.label)
       return this.labels.filter(item => labelIds.includes(item.id))
@@ -67,12 +71,28 @@ export default {
   },
 
   methods: {
-    textColor(backgroundColor) {
-      return idealColor(backgroundColor)
+    isValidLabel(item) {
+      return typeof item === 'object'
+    },
+    textColor(item) {
+      if (typeof item === 'object') {
+        return idealColor(item.background_color)
+      } else {
+        return ''
+      }
+    },
+    backgroundColor(item) {
+      if (typeof item === 'object') {
+        return item.background_color
+      } else {
+        return ''
+      }
     },
     add(labels) {
       const label = labels[labels.length - 1]
-      this.addLabel(label.id)
+      if (typeof label === 'object') {
+        this.addLabel(label.id)
+      }
     },
     remove(labelId) {
       const annotation = this.annotations.find(item => item.label === labelId)
