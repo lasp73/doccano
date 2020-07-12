@@ -35,6 +35,18 @@
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
+      <v-list-item @click="resetFilter">
+        <v-list-item-icon>
+          <v-icon>
+            mdi-sync
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            Reset
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
@@ -71,11 +83,17 @@ export default {
     }
   },
 
-  created() {
-    this.initSearchOptions()
-  },
-
   methods: {
+    resetFilter() {
+      this.initSearchOptions()
+      this.setCurrent(0)
+      this.movePage(1)
+      this.getDocumentList({
+        projectId: this.$route.params.id
+      })
+      this.selected = 0
+    },
+    ...mapActions('pagination', ['movePage']),
     ...mapActions('documents', ['getDocumentList']),
     ...mapActions('pagination', ['movePage']),
     ...mapMutations('documents', ['setCurrent', 'updateSearchOptions', 'initSearchOptions'])
