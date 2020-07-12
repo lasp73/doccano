@@ -93,7 +93,6 @@ export default {
       })
       this.selected = 0
     },
-    ...mapActions('pagination', ['movePage']),
     ...mapActions('documents', ['getDocumentList']),
     ...mapActions('pagination', ['movePage']),
     ...mapMutations('documents', ['setCurrent', 'updateSearchOptions', 'initSearchOptions'])
